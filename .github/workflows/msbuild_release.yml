@@ -7,7 +7,7 @@ on:
     branches: [ "master" ]
 
 env:
-  SOLUTION_FILE_PATH: ./MySolution.sln  # Update this to your solution file path
+  SOLUTION_FILE_PATH: .
   BUILD_CONFIGURATION: Release
   OUTPUT_DIR: build_output  # Relative path to the build output directory
 
