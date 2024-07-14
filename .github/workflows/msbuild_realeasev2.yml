@@ -9,7 +9,7 @@ on:
 env:
   SOLUTION_FILE_PATH: .
   BUILD_CONFIGURATION: Release
-  OUTPUT_DIR: build_output
+  OUTPUT_DIR: D:\a\GDRVLoader\GDRVLoader\x64\Release  # Adjust this to your actual output directory
 
 jobs:
   build:
@@ -46,12 +46,12 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./path/to/your/executable.exe  # Update this path to your actual executable file
+        asset_path: ${{env.OUTPUT_DIR}}\GDRVLoader.exe  # Update this path to your actual executable file
         asset_name: program-${{ runner.os }}.exe
         asset_content_type: application/octet-stream
 
     - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: build-artifacts
         path: ${{env.OUTPUT_DIR}}
