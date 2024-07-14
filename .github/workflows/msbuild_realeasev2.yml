@@ -19,7 +19,9 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Add MSBuild to PATH
-      uses: microsoft/setup-msbuild@v1.0.2
+      uses: microsoft/setup-msbuild@v2
+      with:
+         msbuild-architecture: x64
 
     - name: Restore NuGet packages
       working-directory: ${{env.GITHUB_WORKSPACE}}
@@ -43,9 +45,6 @@ jobs:
           - Second Change
         draft: false
         prerelease: false
-
-    - name: Debug upload_url
-      run: echo ${{ steps.create_release.outputs.upload_url }}
 
     - name: Upload Release Asset (Executable)
       uses: actions/upload-release-asset@v1
