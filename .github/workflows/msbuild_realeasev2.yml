@@ -35,13 +35,13 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: v1.0.${{ github.run_number }}
-        release_name: Release ${{ github.run_number }}
+        tag_name: v1.0..${{ env.RELEASE_DATE }}
+        release_name: Release .${{ env.RELEASE_DATE }}
         draft: false
         prerelease: false
 
     - name: Upload Release Asset (Executable)
-      uses: actions/upload-release-asset@v1
+      uses: actions/upload-release-asset@v4
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
