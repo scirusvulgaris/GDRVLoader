@@ -1,4 +1,4 @@
-name: MSBuild
+name: Release Workflow
 
 on:
   push:
@@ -7,17 +7,9 @@ on:
     branches: [ "master" ]
 
 env:
-  # Path to the solution file relative to the root of the project.
-  SOLUTION_FILE_PATH: .  # Update to your solution file path
-
-  # Configuration type to build.
+  SOLUTION_FILE_PATH: .
   BUILD_CONFIGURATION: Release
-
-  # Output directory for build artifacts
-  OUTPUT_DIR: build_output  # Define the output directory
-
-permissions:
-  contents: read
+  OUTPUT_DIR: build_output
 
 jobs:
   build:
@@ -30,13 +22,33 @@ jobs:
       uses: microsoft/setup-msbuild@v1.0.2
 
     - name: Restore NuGet packages
-      run: nuget restore ${{ env.SOLUTION_FILE_PATH }}
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      run: nuget restore ${{env.SOLUTION_FILE_PATH}}
 
     - name: Build
-      run: msbuild ${{ env.SOLUTION_FILE_PATH }} /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:OutDir=${{ env.OUTPUT_DIR }}\\
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_FILE_PATH}}
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      with:
+        tag_name: v${{ github.run_number }}-${{ github.sha }}
+        release_name: Release ${{ github.run_number }}
+        draft: false
+        prerelease: false
+        generate_release_notes: true
+
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./program.tar.gz
+        asset_name: program-${{ runner.os }}.tar.gz
+        asset_content_type: application/tar.gz
 
     - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v2
       with:
         name: build-artifacts
-        path: ${{ env.OUTPUT_DIR }}  # Upload the entire output directory
+        path: ${{env.OUTPUT_DIR}}
