@@ -33,22 +33,22 @@ jobs:
       id: create_release
       uses: actions/create-release@v1
       with:
-        tag_name: v${{ github.run_number }}-${{ github.sha }}
+        tag_name: v1.0.${{ github.run_number }}
         release_name: Release ${{ github.run_number }}
         draft: false
         prerelease: false
         generate_release_notes: true
 
-    - name: Upload Release Asset
+    - name: Upload Release Asset (Executable)
       uses: actions/upload-release-asset@v1
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./program.tar.gz
-        asset_name: program-${{ runner.os }}.tar.gz
-        asset_content_type: application/tar.gz
+        asset_path: ./path/to/your/executable.exe  # Update this path to your actual executable file
+        asset_name: program-${{ runner.os }}.exe
+        asset_content_type: application/octet-stream
 
     - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: build-artifacts
         path: ${{env.OUTPUT_DIR}}
